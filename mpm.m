@@ -290,34 +290,70 @@ end
 function [package, opts] = setDefaultOpts()
 % load opts from config file, and then set additional defaults
 
-    % empty package
+    config = getConfig();
+
+    % update defaults with configuration settings
+    package = setDefaultPackage(config.package);
+    opts = setDefaultOptions(config.options);
+    
+    % place meta info in install location
+    opts.metadir = opts.installDir;
+end
+
+function options = setDefaultOptions(config)
+    % set default option-values from configuration
+    options = getDefaultOptions();
+    fields = fieldnames(config);
+    for ifield = 1:numel(fields)
+        field = fields{ifield};
+        options.(field) = config.(field);
+    end
+end
+
+function package = setDefaultPackage(config)
+    % set default/empty package from configuration
+    package = getDefaultPackage();
+    fields = fieldnames(config);
+    for ifield = 1:numel(fields)
+        field = fields{ifield};
+        package.(field) = config.(field);
+    end
+end
+
+function config = getConfig()
+    config = mpm_config();
+end
+
+function package = getDefaultPackage()
+    % get default/empty package
     package.name = '';
     package.url = '';
     package.internalDir = '';
     package.releaseTag = '';
-    package.addPath = true;
+    package.addPath = false;
     package.localInstall = false;
     package.noRmdirOnUninstall = false;
     package.addAllDirsToPath = false;
     package.collection = 'default';
+end
 
-    opts = mpm_config(); % load default opts from config file
-    opts.installDir = opts.DEFAULT_INSTALL_DIR;
-    opts.metadir = opts.DEFAULT_INSTALL_DIR;
-    opts.searchGithubFirst = opts.DEFAULT_CHECK_GITHUB_FIRST;
+function opts = getDefaultOptions()
+    % get default options
+    opts.installDir = fullfile(mfilename('fullpath'));
+    opts.metadir = '';
+    opts.searchGithubFirst = false;
     opts.updateMpmPaths = false;
     opts.updateAllPaths = false;
     opts.localInstall = false;
     opts.localInstallUseLocal = false;
     opts.addAllDirsToPath = false;
-    opts.installDirOverride = false; % true if user sets using -d
-
+    opts.installDirOverride = false;
     opts.inFile = '';
     opts.force = false;
     opts.approve = false;
     opts.debug = false;
     opts.noPaths = false;
-    opts.collection = package.collection;
+    opts.collection = 'default';
 end
 
 function url = handleCustomUrl(url, releaseTag)

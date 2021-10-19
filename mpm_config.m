@@ -1,12 +1,16 @@
-function opts = mpm_config()
+function config = mpm_config()
 
-    opts = struct();
-    
-    % set default directory to install packages
-    curdir = fileparts(mfilename('fullpath'));
-    opts.DEFAULT_INSTALL_DIR = fullfile(curdir, 'mpm-packages');
-    
-    % search github before searching Matlab File Exchange?
-    opts.DEFAULT_CHECK_GITHUB_FIRST = false;
+    CURDIR = fileparts(mfilename('fullpath'));
+    PKGDIR = 'mpm-packages';
 
+    % configurable package defaults
+    package.collection = 'default';
+
+    % configurable option defaults
+    options.installDir = fullfile(CURDIR, PKGDIR);
+    options.searchGithubFirst = false;
+
+    % return configuration settings
+    config.package = package;
+    config.options = options;
 end
