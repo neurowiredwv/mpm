@@ -330,7 +330,7 @@ function package = getDefaultPackage()
     package.url = '';
     package.internalDir = '';
     package.releaseTag = '';
-    package.addPath = false;
+    package.addPath = true;
     package.localInstall = false;
     package.noRmdirOnUninstall = false;
     package.addAllDirsToPath = false;
@@ -339,7 +339,7 @@ end
 
 function opts = getDefaultOptions()
     % get default options
-    opts.installDir = fullfile(mfilename('fullpath'));
+    opts.installDir = '';
     opts.metadir = '';
     opts.searchGithubFirst = false;
     opts.updateMpmPaths = false;
